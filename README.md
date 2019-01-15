@@ -3,3 +3,4 @@ Physics simulation of two masses colliding with each other and a wall. All the c
 
 # source
 I created this simulation on my own after I saw this video: https://www.youtube.com/watch?v=HEfHFsfGXjs&t=159s
+The clack sound is from: http://soundbible.com/1405-Dry-Fire-Gun.html
