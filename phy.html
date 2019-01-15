@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Physics</title>
+    <meta charset="utf-8" />
+    <style>
+      body {
+        background-color: black;
+        color: white;
+      }
+      canvas {
+        border-bottom: 10px solid green;
+        box-shadow: 0px 25px 100px 1px green;
+        margin-top: 30px;
+      }
+    </style>
+    <script>
+      // box size = 60px*60px
+      var clack = new Audio("Dry Fire Gun-SoundBible.com-2053652037.mp3");
+      var pxA = 50;
+      var vA = 0;
+      var pxB = 130;
+      var vB = -1;
+      var collisions = 0;
+      var mA = 1; //Blue in colour
+      var mB = 1; //Red in colour
+
+      window.onload = () => {
+        canvas = document.getElementById("canv");
+        pyA = canvas.height - 60;
+        pyB = canvas.height - 60;
+        ctx = canvas.getContext("2d");
+        interval = setInterval(game, 1 / 10000);
+      };
+
+      newGame = () => {
+        pxA = 50;
+        vA = 0;
+        pxB = 130;
+        vB = -0.1;
+        collisions = 0;
+        mB = document.getElementById("mB"); //Red in colour
+        mB = parseInt(mB.options[mB.selectedIndex].value);
+      };
+
+      function game() {
+        ctx.fillStyle = "black";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        pxA += vA;
+        pxB += vB;
+
+        //Blue is mass A
+        ctx.fillStyle = "blue";
+        ctx.fillRect(pxA, pyA, 60, 60);
+
+        //Red is mass B
+        ctx.fillStyle = "red";
+        ctx.fillRect(pxB, pyB, 60, 60);
+
+        ctx.font = "16px Arial";
+        ctx.fillText(mA + " KG", pxA + 10, canvas.height - 60);
+        ctx.fillText(mB + " KG", pxB - 3, canvas.height - 60);
+        ctx.font = "30px Arial";
+        ctx.fillText("Collisions: " + collisions, 10, 30);
+
+        if (Math.abs(pxA - pxB) <= 60) {
+          if (!clack.paused && clack.currentTime > 0) clack.currentTime = 0;
+          else clack.play();
+          var newvA =
+            ((mA - mB) / (mA + mB)) * vA + ((2 * mB) / (mA + mB)) * vB;
+          var newvB =
+            ((mB - mA) / (mA + mB)) * vB + ((2 * mA) / (mA + mB)) * vA;
+          vA = newvA;
+          vB = newvB;
+
+          collisions++;
+        }
+
+        if (pxA <= 0) {
+          if (!clack.paused && clack.currentTime > 0) clack.currentTime = 0;
+          else clack.play();
+          vA = -vA;
+          collisions++;
+        }
+
+        document.getElementById("colls").innerHTML = collisions;
+      }
+    </script>
+  </head>
+  <body>
+    <div align="center">
+      <h3>Collisions: <span id="colls"></span></h3>
+      Mass:
+      <select id="mB" onchange="newGame()">
+        <option>1</option>
+        <option>100</option>
+        <option>10000</option>
+        <option>1000000</option>
+      </select>
+      <br />
+      <canvas id="canv" width="500" , height="500"></canvas>
+    </div>
+  </body>
+</html>
